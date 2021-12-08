@@ -12,7 +12,7 @@ class Drawer:
     def draw_player(self, player):
         x, y = player.x, player.y
         pygame.draw.rect(self.sc, RED, (x - 15, y - 15, 30, 30))
-        pygame.draw.line(self.sc, GREEN, (x, y), (x + MAX_DEPTH * cos(radians(player.angle)), y + MAX_DEPTH * sin(radians(player.angle))))
+        pygame.draw.line(self.sc, GREEN, (x, y), (x + MAX_DEPTH * cos(radians(player.angle)), y - MAX_DEPTH * sin(radians(player.angle))))
 
     def draw_map(self):
         for wall in self.map.world_map:

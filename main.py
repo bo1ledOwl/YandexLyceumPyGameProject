@@ -9,10 +9,6 @@ from ray_casting import ray_casting_func
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# pygame.mixer.music.load('the_only_thing_they_fear_is_you.wav')
-# pygame.mixer.music.play(-1)
-# pygame.mixer.music.set_volume(0.3)
-
 clock = pygame.time.Clock()
 game_map = Map("maps/map.png")
 drawer = Drawer(sc, game_map)
