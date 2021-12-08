@@ -1,32 +1,27 @@
 import math
-from map import Map
 
-# game settings
+# основные настройки
 WIDTH = 1200
 HEIGHT = 800
 HALF_WIDTH = WIDTH // 2
 HALF_HEIGHT = HEIGHT // 2
 FPS = 60
 TILE = 50
-FPS_POS = (WIDTH - 65, 5)
 
-# ray casting settings
-FOV = math.pi / 2
+# настройки ray casting
+FOV = 90
 HALF_FOV = FOV / 2
-NUM_RAYS = 25
+NUM_RAYS = 150
 MAX_DEPTH = 800
 DELTA_ANGLE = FOV / NUM_RAYS
-DIST = NUM_RAYS / (2 * math.tan(HALF_FOV))
-PROJ_COEFF = 3 * DIST * TILE
-SCALE = WIDTH // NUM_RAYS
 
-# player settings
+# настройки игрока
 PLAYER_START_POS = (HALF_WIDTH, HALF_HEIGHT)
 PLAYER_ANGLE = 0
-PLAYER_SPEED = 1
-PLAYER_ROTATE_SPEED = 1
+PLAYER_SPEED = 2
+PLAYER_ROTATE_SPEED = 2
 
-# colors
+# цвета
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)

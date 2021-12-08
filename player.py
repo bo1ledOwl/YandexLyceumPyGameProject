@@ -8,9 +8,10 @@ class Player:
         self.angle = PLAYER_ANGLE
 
     def movement(self):
-        sin_a = math.sin(self.angle)
-        cos_a = math.cos(self.angle)
+        sin_a = math.sin(math.radians(self.angle))
+        cos_a = math.cos(math.radians(self.angle))
         keys = pygame.key.get_pressed()
+        # ниже страшная вещь для перемещения как в шутерах
         if keys[pygame.K_w]:
             self.x += PLAYER_SPEED * cos_a
             self.y += PLAYER_SPEED * sin_a
@@ -19,11 +20,11 @@ class Player:
             self.y += -PLAYER_SPEED * sin_a
         if keys[pygame.K_a]:
             self.x += PLAYER_SPEED * sin_a
-            self.y += -PLAYER_SPEED * cos_a
+            self.y -= PLAYER_SPEED * cos_a
         if keys[pygame.K_d]:
             self.x += -PLAYER_SPEED * sin_a
-            self.y += PLAYER_SPEED * cos_a
+            self.y -= -PLAYER_SPEED * cos_a
         if keys[pygame.K_LEFT]:
-            self.angle = (self.angle + PLAYER_ROTATE_SPEED) % 360
-        if keys[pygame.K_RIGHT]:
             self.angle = (self.angle - PLAYER_ROTATE_SPEED) % 360
+        if keys[pygame.K_RIGHT]:
+            self.angle = (self.angle + PLAYER_ROTATE_SPEED) % 360
