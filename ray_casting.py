@@ -7,20 +7,28 @@ def ray_casting_func(player, map, sc):
     current_angle = player.angle
     xo, yo = player.x, player.y
     for ray in range(NUM_RAYS):
-        sin_a = math.sin(current_angle)
-        cos_a = math.cos(current_angle)
-        x1 = math.tan(current_angle)
-        ya = 0
+        sin_a = math.sin(math.radians(current_angle))
+        cos_a = math.cos(math.radians(current_angle))
+        x1 = math.tan(math.radians(current_angle))
+        if x1 == 0 or cos_a == 0 or sin_a == 0:
+            return
+        k = 50 / x1
+        ya = yo
+        xa = xo
+        x = xo
+        y = yo
         for depth in range(TILE):
-            if yo + depth * sin_a % TILE == 0:
-                ya = yo + depth * sin_a
+            if xo + depth * cos_a % TILE == 0:
+                xa = xo + depth * cos_a
                 break
-        xa = xo + (ya - yo) / math.tan(current_angle)
         a = 0
         while True:
-            if ((xa + x1 * a) // TILE * TILE, (ya + TILE * a) // TILE * TILE) in map.world_map:
-                x = xa + x1 * a
-                y = ya + TILE * a
+            if a > 20:
+                break
+            x_cor = xa + k * a
+            if (x_cor // TILE * TILE, (x_cor - xo + yo / x1) * x1 // TILE * TILE) in map.world_map:
+                x = x_cor
+                y = (x_cor - xo + yo / x1) * x1
                 break
             else:
                 a += 1

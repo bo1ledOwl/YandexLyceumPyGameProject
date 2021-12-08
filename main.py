@@ -27,8 +27,8 @@ while True:
 
     drawer.draw_player(player)
     drawer.draw_map()
-    print(player.angle)
-    # ray_casting_func(player, game_map, sc)
+    #print(player.angle)
+    ray_casting_func(player, game_map, sc)
     player.movement()
 
     pygame.display.flip()

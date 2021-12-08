@@ -27,3 +27,4 @@ class Map:
                     if char == '#':
                         self.world_map.add((i * 50, j * 50))
         self.world_map = sorted(self.world_map)
+        print(self.world_map)
