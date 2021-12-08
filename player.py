@@ -24,6 +24,6 @@ class Player:
             self.x += -PLAYER_SPEED * sin_a
             self.y += PLAYER_SPEED * cos_a
         if keys[pygame.K_LEFT]:
-            self.angle = (self.angle - PLAYER_ROTATE_SPEED) % 360
-        if keys[pygame.K_RIGHT]:
             self.angle = (self.angle + PLAYER_ROTATE_SPEED) % 360
+        if keys[pygame.K_RIGHT]:
+            self.angle = (self.angle - PLAYER_ROTATE_SPEED) % 360
