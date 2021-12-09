@@ -44,7 +44,7 @@ def ray_casting_func(player, sc):
             yv = yo + depth_v * sin_a
             if map_coords(xv + x_next, yv) in world_map:
                 depth_v *= math.cos(math.radians(player.angle - a))
-                c = 255 / (1 + depth_v * depth_v * 0.0000001)
+                c = 255 / (1 + depth_v * depth_v * 0.000001)
                 color = (c, c, c)
                 proj_height_v = PROJECTION_COEFF / depth_v
                 break

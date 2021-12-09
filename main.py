@@ -20,6 +20,10 @@ while True:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 exit()
+        if event.type == pygame.MOUSEMOTION:
+            player.rotate_camera(event.rel)
+            print(event.rel)
+
     sc.fill(BLACK)
 
     # drawer.draw_player(player)
