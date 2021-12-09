@@ -7,7 +7,7 @@ def recalculate():
     SCALE = SCREEN_WIDTH // NUM_RAYS
 
 # основные настройки
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 WIDTH = 1200
 HEIGHT = 800
@@ -21,7 +21,7 @@ MINIMAP_DEPTH = 100
 # настройки ray casting
 FOV = 90
 HALF_FOV = FOV / 2
-NUM_RAYS = 150
+NUM_RAYS = SCREEN_WIDTH // 8 * (FOV // 60)
 DELTA_ANGLE = FOV / NUM_RAYS
 DIST = NUM_RAYS / (2 * math.tan(math.radians(HALF_FOV)))
 PROJECTION_COEFF = 3 * DIST * TILE
