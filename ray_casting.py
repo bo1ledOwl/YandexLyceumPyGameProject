@@ -25,8 +25,9 @@ def ray_casting_func(player, sc):
             xh = xo + depth_h * cos_a
             if map_coords(xh, yh + y_next) in world_map:
                 depth_h *= math.cos(math.radians(player.angle - a))
-                c = 255 / (1 + depth_h * depth_h * 0.000001)
-                color = (c, c, c)
+                c = 255 / (depth_h * 0.01)
+                c = 255 if c > 255 else c
+                color = (0, c, 0)
                 if depth_h != 0:
                     proj_height_h = PROJECTION_COEFF / depth_h
                 break
@@ -42,8 +43,9 @@ def ray_casting_func(player, sc):
             yv = yo + depth_v * sin_a
             if map_coords(xv + x_next, yv) in world_map:
                 depth_v *= math.cos(math.radians(player.angle - a))
-                c = 255 / (1 + depth_v * depth_v * 0.000001)
-                color = (c, c, c)
+                c = 255 / (depth_v * 0.01)
+                c = 255 if c > 255 else c
+                color = (0, c, 0)
                 if depth_v != 0:
                     proj_height_v = PROJECTION_COEFF / depth_v
                 break
