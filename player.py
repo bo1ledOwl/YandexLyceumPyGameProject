@@ -3,6 +3,7 @@ from map import *
 import pygame
 import math
 
+
 class Player:
     def __init__(self, start_coords):
         self.x, self.y = start_coords
@@ -18,26 +19,25 @@ class Player:
         elif not map_coords(self.x, self.y - PLAYER_SPEED) in world_map and dy < 0:
             self.y += dy
 
-
     def movement(self):
-        self.sin_a = math.sin(math.radians(self.angle))
-        self.cos_a = math.cos(math.radians(self.angle))
+        sin_a = math.sin(math.radians(self.angle))
+        cos_a = math.cos(math.radians(self.angle))
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
-            delta_x = PLAYER_SPEED * self.cos_a
-            delta_y = PLAYER_SPEED * self.sin_a
+            delta_x = PLAYER_SPEED * cos_a
+            delta_y = PLAYER_SPEED * sin_a
             self.check_intersection(delta_x, delta_y)
         if keys[pygame.K_s]:
-            delta_x = -PLAYER_SPEED * self.cos_a
-            delta_y = -PLAYER_SPEED * self.sin_a
+            delta_x = -PLAYER_SPEED * cos_a
+            delta_y = -PLAYER_SPEED * sin_a
             self.check_intersection(delta_x, delta_y)
         if keys[pygame.K_a]:
-            delta_x = PLAYER_SPEED * self.sin_a
-            delta_y = -PLAYER_SPEED * self.cos_a
+            delta_x = PLAYER_SPEED * sin_a
+            delta_y = -PLAYER_SPEED * cos_a
             self.check_intersection(delta_x, delta_y)
         if keys[pygame.K_d]:
-            delta_x = -PLAYER_SPEED * self.sin_a
-            delta_y = PLAYER_SPEED * self.cos_a
+            delta_x = -PLAYER_SPEED * sin_a
+            delta_y = PLAYER_SPEED * cos_a
             self.check_intersection(delta_x, delta_y)
 
     def rotate_camera(self, mouse_move=(0, 0)):

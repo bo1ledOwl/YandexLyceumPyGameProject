@@ -1,8 +1,10 @@
 from settings import *
 from PIL import Image
 
+
 def map_coords(x, y):
     return (x // TILE) * TILE, (y // TILE) * TILE
+
 
 world_map = set()
 im = Image.open("maps/map.png")

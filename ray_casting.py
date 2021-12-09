@@ -3,6 +3,7 @@ import math
 from settings import *
 from map import *
 
+
 def ray_casting_func(player, sc):
     a = (player.angle - HALF_FOV) % 360
     xo, yo = player.x, player.y
