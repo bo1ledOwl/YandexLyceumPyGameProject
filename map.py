@@ -5,6 +5,9 @@ world_map = set()
 im = Image.open("maps/map.png")
 pixels = im.load()
 x, y = im.size
+WIDTH = x * TILE
+HEIGHT = y * TILE
+recalculate()
 for i in range(x):
     for j in range(y):
         r, g, b = pixels[i, j]

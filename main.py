@@ -6,7 +6,7 @@ from drawing import Drawer
 from ray_casting import ray_casting_func
 
 pygame.init()
-sc = pygame.display.set_mode((WIDTH, HEIGHT))
+sc = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
 drawer = Drawer(sc)
@@ -19,10 +19,11 @@ while True:
             exit()
     sc.fill(BLACK)
 
-    drawer.draw_player(player)
-    drawer.draw_map()
+    # drawer.draw_player(player)
     # print(player.angle)
+    drawer.draw_background()
     ray_casting_func(player, sc)
+    drawer.draw_minimap(player)
     player.movement()
 
     pygame.display.flip()

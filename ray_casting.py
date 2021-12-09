@@ -27,6 +27,10 @@ def ray_casting_func(player, sc):
             depth_h = (yh - yo) / sin_a
             xh = xo + depth_h * cos_a
             if map_coords(xh, yh + y_next) in world_map:
+                depth_h *= math.cos(math.radians(player.angle - a))
+                c = 255 / (1 + depth_h * depth_h * 0.000001)
+                color = (c, c, c)
+                proj_height_h = PROJECTION_COEFF / depth_h
                 break
             yh += y_next * TILE
 
@@ -39,11 +43,15 @@ def ray_casting_func(player, sc):
             depth_v = (xv - xo) / cos_a
             yv = yo + depth_v * sin_a
             if map_coords(xv + x_next, yv) in world_map:
+                depth_v *= math.cos(math.radians(player.angle - a))
+                c = 255 / (1 + depth_v * depth_v * 0.0000001)
+                color = (c, c, c)
+                proj_height_v = PROJECTION_COEFF / depth_v
                 break
             xv += x_next * TILE
 
         if depth_h < depth_v:
-            pygame.draw.line(sc, WHITE, (xo, yo), (xh, yh), 1)
+            pygame.draw.rect(sc, color, (ray * SCALE, HALF_HEIGHT - proj_height_h // 2, SCALE, proj_height_h))
         else:
-            pygame.draw.line(sc, WHITE, (xo, yo), (xv, yv), 1)
+            pygame.draw.rect(sc, color, (ray * SCALE, HALF_HEIGHT - proj_height_v // 2, SCALE, proj_height_v))
         a += DELTA_ANGLE
