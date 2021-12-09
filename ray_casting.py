@@ -27,7 +27,8 @@ def ray_casting_func(player, sc):
                 depth_h *= math.cos(math.radians(player.angle - a))
                 c = 255 / (1 + depth_h * depth_h * 0.000001)
                 color = (c, c, c)
-                proj_height_h = PROJECTION_COEFF / depth_h
+                if depth_h != 0:
+                    proj_height_h = PROJECTION_COEFF / depth_h
                 break
             yh += y_next * TILE
 
@@ -43,12 +44,13 @@ def ray_casting_func(player, sc):
                 depth_v *= math.cos(math.radians(player.angle - a))
                 c = 255 / (1 + depth_v * depth_v * 0.000001)
                 color = (c, c, c)
-                proj_height_v = PROJECTION_COEFF / depth_v
+                if depth_v != 0:
+                    proj_height_v = PROJECTION_COEFF / depth_v
                 break
             xv += x_next * TILE
 
-        if depth_h < depth_v:
+        if depth_h < depth_v and depth_h != 0:
             pygame.draw.rect(sc, color, (ray * SCALE, HALF_HEIGHT - proj_height_h // 2, SCALE, proj_height_h))
-        else:
+        elif depth_v < depth_h and depth_v != 0:
             pygame.draw.rect(sc, color, (ray * SCALE, HALF_HEIGHT - proj_height_v // 2, SCALE, proj_height_v))
         a += DELTA_ANGLE
