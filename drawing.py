@@ -10,7 +10,7 @@ class Drawer:
         self.sc = surface
 
     def draw_background(self):
-        pygame.draw.rect(self.sc, DARKGRAY, (0, 0, SCREEN_WIDTH, SCREEN_HEIGHT * 0.55))
+        pygame.draw.rect(self.sc, DARKGRAY, (0, 0, WIDTH, HEIGHT * 0.55))
 
     def draw_minimap(self, player):
         pygame.draw.rect(self.sc, BLACK, (0, 0, world_map[-1][0] * MINIMAP_SCALE, world_map[-1][1] * MINIMAP_SCALE))

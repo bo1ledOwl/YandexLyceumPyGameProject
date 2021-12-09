@@ -1,16 +1,17 @@
 import pygame
 from settings import *
+from map import *
 from player import Player
 import math
 from drawing import Drawer
 from ray_casting import ray_casting_func
 
 pygame.init()
-sc = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+sc = pygame.display.set_mode((WIDTH, HEIGHT))
 
 clock = pygame.time.Clock()
 drawer = Drawer(sc)
-player = Player()
+player = Player(PLAYER_START_POSITION)
 
 
 while True:
@@ -22,11 +23,9 @@ while True:
                 exit()
         if event.type == pygame.MOUSEMOTION:
             player.rotate_camera(event.rel)
-            print(event.rel)
+            # print(event.rel)
 
     sc.fill(BLACK)
-
-    # drawer.draw_player(player)
     # print(player.angle)
     drawer.draw_background()
     ray_casting_func(player, sc)
@@ -34,5 +33,5 @@ while True:
     player.movement()
 
     pygame.display.flip()
-    #print(int(clock.get_fps()))
+    # print(int(clock.get_fps()))
     clock.tick(FPS)

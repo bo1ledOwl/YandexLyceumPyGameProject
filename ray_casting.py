@@ -3,9 +3,6 @@ import math
 from settings import *
 from map import *
 
-def map_coords(x, y):
-    return (x // TILE) * TILE, (y // TILE) * TILE
-
 def ray_casting_func(player, sc):
     a = (player.angle - HALF_FOV) % 360
     xo, yo = player.x, player.y
