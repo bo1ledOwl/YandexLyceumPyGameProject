@@ -17,6 +17,9 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                exit()
     sc.fill(BLACK)
 
     # drawer.draw_player(player)
@@ -27,5 +30,5 @@ while True:
     player.movement()
 
     pygame.display.flip()
-    print(int(clock.get_fps()))
+    #print(int(clock.get_fps()))
     clock.tick(FPS)

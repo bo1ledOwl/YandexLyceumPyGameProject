@@ -24,7 +24,14 @@ class Player:
         if keys[pygame.K_d]:
             self.x += -PLAYER_SPEED * sin_a
             self.y -= -PLAYER_SPEED * cos_a
-        if keys[pygame.K_LEFT]:
-            self.angle = (self.angle - PLAYER_ROTATE_SPEED) % 360
-        if keys[pygame.K_RIGHT]:
-            self.angle = (self.angle + PLAYER_ROTATE_SPEED) % 360
+        mouse_move = (0, 0)
+        pygame.mouse.set_visible(False)
+        pygame.event.set_grab(True)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEMOTION:
+                mouse_move = event.rel
+                print(event.rel)
+        if mouse_move[0] < 0:
+            self.angle -= PLAYER_ROTATE_SPEED * -(mouse_move[0]) // 5
+        elif mouse_move[0] > 0:
+            self.angle += PLAYER_ROTATE_SPEED * (mouse_move[0]) // 5
