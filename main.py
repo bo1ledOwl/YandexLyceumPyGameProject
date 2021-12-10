@@ -30,8 +30,8 @@ while True:
     drawer.draw_background()
     ray_casting_func(player, sc)
     drawer.draw_minimap(player)
+    drawer.fps(clock)
     player.movement()
 
     pygame.display.flip()
-    # print(int(clock.get_fps()))
     clock.tick(FPS)

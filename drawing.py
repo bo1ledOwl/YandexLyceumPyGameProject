@@ -8,6 +8,7 @@ from map import *
 class Drawer:
     def __init__(self, surface):
         self.sc = surface
+        self.font = pygame.font.SysFont('Arial', 36, bold=True)
 
     def draw_background(self):
         pygame.draw.rect(self.sc, SKYBLUE, (0, 0, WIDTH, HALF_HEIGHT))
@@ -24,3 +25,8 @@ class Drawer:
                          (y + MINIMAP_DEPTH * sin(radians(player.angle))) * MINIMAP_SCALE))
         pygame.draw.rect(self.sc, RED,
                          ((x - 15) * MINIMAP_SCALE, (y - 15) * MINIMAP_SCALE, 30 * MINIMAP_SCALE, 30 * MINIMAP_SCALE))
+
+    def fps(self, clock):
+        display_fps = str(int(clock.get_fps()))
+        render = self.font.render(display_fps, True, DARKORANGE)
+        self.sc.blit(render, FPS_POS)

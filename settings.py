@@ -9,6 +9,7 @@ FPS = 60
 TILE = 50
 MINIMAP_SCALE = 0.2
 MINIMAP_DEPTH = 100
+FPS_POS = (WIDTH - 65, 5)
 
 # настройки ray casting
 FOV = 90
@@ -35,3 +36,5 @@ PURPLE = (120, 0, 120)
 SKYBLUE = (0, 186, 255)
 YELLOW = (220, 220, 0)
 SANDY = (244, 164, 96)
+DARKBROWN = (97, 61, 25)
+DARKORANGE = (255, 140, 0)
