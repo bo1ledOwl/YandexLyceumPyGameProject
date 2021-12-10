@@ -11,8 +11,8 @@ def ray_casting_func(player, sc):
     for ray in range(NUM_RAYS):
         sin_a = math.sin(math.radians(a))
         cos_a = math.cos(math.radians(a))
-        proj_height_h = HEIGHT
-        proj_height_v = HEIGHT
+        proj_height_h = 0
+        proj_height_v = 0
         if not sin_a:
             sin_a = 0.00000001
         if not cos_a:
@@ -30,6 +30,8 @@ def ray_casting_func(player, sc):
                 depth_h *= math.cos(math.radians(player.angle - a))
                 if depth_h != 0:
                     proj_height_h = PROJECTION_COEFF / depth_h
+                else:
+                    proj_height_h = HEIGHT
                 break
             yh += y_next * TILE
 
@@ -45,6 +47,8 @@ def ray_casting_func(player, sc):
                 depth_v *= math.cos(math.radians(player.angle - a))
                 if depth_v != 0:
                     proj_height_v = PROJECTION_COEFF / depth_v
+                else:
+                    proj_height_v = HEIGHT
                 break
             xv += x_next * TILE
 
