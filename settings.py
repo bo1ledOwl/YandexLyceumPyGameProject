@@ -10,6 +10,7 @@ TILE = 50
 MINIMAP_SCALE = 0.2
 MINIMAP_DEPTH = 100
 FPS_POS = (WIDTH - 65, 5)
+PAUSE_POS = (HALF_WIDTH - 50, 100)
 
 # настройки ray casting
 FOV = 90

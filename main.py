@@ -13,6 +13,9 @@ clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 
+font = pygame.font.SysFont('Arial', 36, bold=True)
+
+paused = False
 
 while True:
     for event in pygame.event.get():
@@ -20,9 +23,16 @@ while True:
             exit()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                exit()
+                if not paused:
+                    paused = True
+                    pygame.mouse.set_visible(True)
+                    pygame.event.set_grab(False)
+                else:
+                    paused = False
+
         if event.type == pygame.MOUSEMOTION:
-            player.rotate_camera(event.rel)
+            if not paused:
+                player.rotate_camera(event.rel)
             # print(event.rel)
 
     sc.fill(BLACK)
@@ -30,8 +40,12 @@ while True:
     drawer.draw_background()
     ray_casting_func(player, sc)
     drawer.draw_minimap(player)
-    drawer.fps(clock)
-    player.movement()
+    if not paused:
+        player.movement()
+        drawer.fps(clock)
+    else:
+        render = font.render("Пауза", True, WHITE)
+        sc.blit(render, PAUSE_POS)
 
     pygame.display.flip()
     clock.tick(FPS)
