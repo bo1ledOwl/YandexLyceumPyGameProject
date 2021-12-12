@@ -33,10 +33,8 @@ while running:
         if event.type == pygame.MOUSEMOTION:
             if not paused:
                 player.rotate_camera(event.rel)
-            # print(event.rel)
 
     sc.fill(BLACK)
-    # print(player.angle)
     drawer.background()
     drawer.walls(player)
     drawer.minimap(player)

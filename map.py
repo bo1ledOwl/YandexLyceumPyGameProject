@@ -1,18 +1,20 @@
+import os
 from settings import *
 from PIL import Image
-
-# соответствие цветов на карте и элементов игры
-SPAWN_POINT = (255, 0, 0)
-WALL1 = (0, 0, 0)
-WALL2 = (100, 100, 100)
 
 
 def map_coords(x, y):
     return (x // TILE) * TILE, (y // TILE) * TILE
 
 
+# соответствие цветов на карте и элементов игры
+SPAWN_POINT = (255, 0, 0) # точка появления
+# виды стен
+WALL1 = (0, 0, 0)
+WALL2 = (100, 100, 100)
+
 world_map = {}
-im = Image.open("maps/map.png")
+im = Image.open(os.path.join("recources/maps/map.png"))
 pixels = im.load()
 x, y = im.size
 MAP_WIDTH = x * TILE
@@ -25,5 +27,4 @@ for i in range(x):
         if (r, g, b) == WALL2:
             world_map[(i * TILE, j * TILE)] = 2
         if (r, g, b) == SPAWN_POINT:
-            # красная точка на карте - спавн игрока
             PLAYER_START_POSITION = (i * TILE + TILE // 2, j * TILE + TILE // 2)
