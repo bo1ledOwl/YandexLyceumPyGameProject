@@ -14,13 +14,13 @@ drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
-
 paused = False
 
-while True:
+running = True
+while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exit()
+            running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if not paused:
@@ -37,9 +37,9 @@ while True:
 
     sc.fill(BLACK)
     # print(player.angle)
-    drawer.draw_background()
-    ray_casting_func(player, sc)
-    drawer.draw_minimap(player)
+    drawer.background()
+    drawer.walls(player)
+    drawer.minimap(player)
     if not paused:
         player.movement()
         drawer.fps(clock)
@@ -49,3 +49,5 @@ while True:
 
     pygame.display.flip()
     clock.tick(FPS)
+
+pygame.quit()

@@ -10,13 +10,13 @@ class Player:
         self.angle = PLAYER_ANGLE
 
     def check_intersection(self, dx, dy):
-        if not map_coords(self.x + PLAYER_SPEED, self.y) in world_map and dx > 0:
+        if not map_coords(self.x + (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map and dx > 0:
             self.x += dx
-        elif not map_coords(self.x - PLAYER_SPEED, self.y) in world_map and dx < 0:
+        elif not map_coords(self.x - (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map and dx < 0:
             self.x += dx
-        if not map_coords(self.x, self.y + PLAYER_SPEED) in world_map and dy > 0:
+        if not map_coords(self.x, self.y + (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map and dy > 0:
             self.y += dy
-        elif not map_coords(self.x, self.y - PLAYER_SPEED) in world_map and dy < 0:
+        elif not map_coords(self.x, self.y - (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map and dy < 0:
             self.y += dy
 
     def movement(self):

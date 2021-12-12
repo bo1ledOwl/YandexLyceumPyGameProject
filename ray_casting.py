@@ -4,15 +4,15 @@ from settings import *
 from map import *
 
 
-def ray_casting_func(player, sc):
+def ray_casting_func(player, sc, textures):
     a = (player.angle - HALF_FOV) % 360
     xo, yo = player.x, player.y
     x_on_map, y_on_map = map_coords(xo, yo)
     for ray in range(NUM_RAYS):
         sin_a = math.sin(math.radians(a))
         cos_a = math.cos(math.radians(a))
-        proj_height_h = 0
-        proj_height_v = 0
+        proj_height_h = 10
+        proj_height_v = 10
         if not sin_a:
             sin_a = 0.00000001
         if not cos_a:
@@ -26,8 +26,10 @@ def ray_casting_func(player, sc):
         for _ in range(0, HEIGHT, TILE):
             depth_h = (yh - yo) / sin_a
             xh = xo + depth_h * cos_a
-            if map_coords(xh, yh + y_next) in world_map:
+            coords = map_coords(xh, yh + y_next)
+            if coords in world_map:
                 depth_h *= math.cos(math.radians(player.angle - a))
+                texture_h = textures[world_map[coords]]
                 if depth_h != 0:
                     proj_height_h = PROJECTION_COEFF / depth_h
                 else:
@@ -43,8 +45,10 @@ def ray_casting_func(player, sc):
         for _ in range(0, HEIGHT, TILE):
             depth_v = (xv - xo) / cos_a
             yv = yo + depth_v * sin_a
-            if map_coords(xv + x_next, yv) in world_map:
+            coords = map_coords(xv + x_next, yv)
+            if coords in world_map:
                 depth_v *= math.cos(math.radians(player.angle - a))
+                texture_v = textures[world_map[coords]]
                 if depth_v != 0:
                     proj_height_v = PROJECTION_COEFF / depth_v
                 else:
@@ -53,7 +57,11 @@ def ray_casting_func(player, sc):
             xv += x_next * TILE
 
         if depth_h < depth_v and depth_h != 0:
-            pygame.draw.rect(sc, GREEN, (ray * SCALE, HALF_HEIGHT - proj_height_h // 2, SCALE, proj_height_h))
+            wall = texture_h.subsurface(int(xh) % TILE * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+            wall = pygame.transform.scale(wall, (SCALE, proj_height_h))
+            sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height_h // 2))
         elif depth_v < depth_h and depth_v != 0:
-            pygame.draw.rect(sc, GREEN, (ray * SCALE, HALF_HEIGHT - proj_height_v // 2, SCALE, proj_height_v))
+            wall = texture_v.subsurface(int(yv) % TILE * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+            wall = pygame.transform.scale(wall, (SCALE, proj_height_v))
+            sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height_v // 2))
         a += DELTA_ANGLE

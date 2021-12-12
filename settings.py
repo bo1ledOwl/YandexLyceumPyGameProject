@@ -15,16 +15,22 @@ PAUSE_POS = (HALF_WIDTH - 50, 100)
 # настройки ray casting
 FOV = 90
 HALF_FOV = FOV / 2
-NUM_RAYS = WIDTH // 8 * (FOV // 60)
+NUM_RAYS = int(WIDTH // 4 * (FOV / 90))
 DELTA_ANGLE = FOV / NUM_RAYS
 DIST = NUM_RAYS / (2 * math.tan(math.radians(HALF_FOV)))
 PROJECTION_COEFF = 3 * DIST * TILE
 SCALE = WIDTH // NUM_RAYS
 
+# настройки текстур
+TEXTURE_WIDTH = 1200
+TEXTURE_HEIGHT = 1200
+TEXTURE_SCALE = TEXTURE_WIDTH // TILE
+
 # настройки игрока
 PLAYER_ANGLE = 0
 PLAYER_SPEED = 1
 PLAYER_ROTATE_SPEED = 1 * (60 / FPS) / 5
+WALL_SAFE_RANGE = 7
 
 # цвета
 WHITE = (255, 255, 255)
