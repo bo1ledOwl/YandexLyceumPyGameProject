@@ -32,7 +32,7 @@ class Drawer:
                          ((x + MINIMAP_DEPTH * cos(radians(player.angle))) * MINIMAP_SCALE,
                          (y + MINIMAP_DEPTH * sin(radians(player.angle))) * MINIMAP_SCALE))
         pygame.draw.rect(self.sc, RED,
-                         ((x - 15) * MINIMAP_SCALE, (y - 15) * MINIMAP_SCALE, 30 * MINIMAP_SCALE, 30 * MINIMAP_SCALE))
+                         ((x - 15) * MINIMAP_SCALE, (y - 15) * MINIMAP_SCALE, 60 * MINIMAP_SCALE, 60 * MINIMAP_SCALE))
 
     def fps(self, clock):
         display_fps = str(int(clock.get_fps()))

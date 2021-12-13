@@ -14,7 +14,7 @@ WALL1 = (0, 0, 0)
 WALL2 = (100, 100, 100)
 
 world_map = {}
-im = Image.open(os.path.join("recources/maps/map.png"))
+im = Image.open(os.path.join("resources/maps/map.png"))
 pixels = im.load()
 x, y = im.size
 MAP_WIDTH = x * TILE
