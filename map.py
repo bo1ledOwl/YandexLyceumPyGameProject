@@ -4,7 +4,7 @@ from PIL import Image
 
 
 def map_coords(x, y):
-    return (x // TILE) * TILE, (y // TILE) * TILE
+    return int((x // TILE) * TILE), int((y // TILE) * TILE)
 
 
 # соответствие цветов на карте и элементов игры

@@ -1,10 +1,15 @@
 import pygame
+import math
+import sys
 from settings import *
 from map import *
 from player import Player
-import math
 from drawing import Drawer
 from ray_casting import ray_casting_func
+
+def terminate():
+	pygame.quit()
+	sys.exit()
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -16,11 +21,10 @@ player = Player(PLAYER_START_POSITION)
 font = pygame.font.SysFont('Arial', 36, bold=True)
 paused = False
 
-running = True
-while running:
+while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False
+            terminate()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 if not paused:
@@ -47,5 +51,3 @@ while running:
 
     pygame.display.flip()
     clock.tick(FPS)
-
-pygame.quit()

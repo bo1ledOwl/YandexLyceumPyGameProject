@@ -30,10 +30,9 @@ def ray_casting_func(player, sc, textures):
             if coords in world_map:
                 depth_h *= math.cos(math.radians(player.angle - a))
                 texture_h = textures[world_map[coords]]
-                if depth_h != 0:
-                    proj_height_h = PROJECTION_COEFF / depth_h
-                else:
-                    proj_height_h = HEIGHT
+                if depth_h == 0:
+                    depth_h = 0.00001
+                proj_height_h = int(PROJECTION_COEFF / depth_h)
                 break
             yh += y_next * TILE
 
@@ -49,20 +48,17 @@ def ray_casting_func(player, sc, textures):
             if coords in world_map:
                 depth_v *= math.cos(math.radians(player.angle - a))
                 texture_v = textures[world_map[coords]]
-                if depth_v != 0:
-                    proj_height_v = PROJECTION_COEFF / depth_v
-                else:
-                    proj_height_v = HEIGHT
+                if depth_v == 0:
+                    depth_v = 0.00001
                 break
             xv += x_next * TILE
 
-        z = 0
-        if depth_h < depth_v and depth_h != 0:
-            wall = texture_h.subsurface(int(xh) % TILE * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
-            wall = pygame.transform.scale(wall, (SCALE, proj_height_h))
-            sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height_h // 2 - z))
-        elif depth_v < depth_h and depth_v != 0:
-            wall = texture_v.subsurface(int(yv) % TILE * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
-            wall = pygame.transform.scale(wall, (SCALE, proj_height_v))
-            sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height_v // 2 - z))
+        if depth_h < depth_v:
+            offset, proj_height, texture = (int(xh) % TILE, int(PROJECTION_COEFF / depth_h), texture_h)
+        else:
+            offset, proj_height, texture = (int(yv) % TILE, int(PROJECTION_COEFF / depth_v), texture_v)
+        wall = texture.subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+        wall = pygame.transform.scale(wall, (SCALE, proj_height))
+        sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2))
         a += DELTA_ANGLE
+        a = a % 360

@@ -18,16 +18,17 @@ class Player:
     def check_intersection(self, dx, dy, keys_count):
         if keys_count > 1:
             keys_count -= 0.5
-        if not map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map and \
-                map_coords(self.x, self.y + self.check_sign(dy) * (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map:
+        if not map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map:
             self.x += dx / keys_count
-        if not map_coords(self.x, self.y + self.check_sign(dy) * (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map and \
-                map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map:
+        if not map_coords(self.x, self.y + self.check_sign(dy) * (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map:
             self.y += dy / keys_count
-        elif not map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE),
-                            self.y + self.check_sign(dy) * (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map:
-            self.x += dx / keys_count
-            self.y += dy / keys_count
+        elif not map_coords(self.x + self.check_sign(dx) * PLAYER_SPEED,
+                            self.y + self.check_sign(dy) * PLAYER_SPEED) in world_map:
+            if not map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE), self.y) in world_map and \
+                    not map_coords(self.x + self.check_sign(dx) * (PLAYER_SPEED + WALL_SAFE_RANGE),
+                                   self.y + self.check_sign(dy) * (PLAYER_SPEED + WALL_SAFE_RANGE)) in world_map:
+                self.x += dx / keys_count
+                self.y += dy / keys_count
 
     def movement(self):
         sin_a = math.sin(math.radians(self.angle))
