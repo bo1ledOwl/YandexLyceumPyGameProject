@@ -3,12 +3,8 @@ from settings import *
 from PIL import Image
 
 
-def map_coords(x, y):
-    return int((x // TILE) * TILE), int((y // TILE) * TILE)
-
-
 # соответствие цветов на карте и элементов игры
-SPAWN_POINT = (255, 0, 0) # точка появления
+SPAWN_POINT = (255, 0, 0)  # точка появления
 # виды стен
 WALL1 = (0, 0, 0)
 WALL2 = (100, 100, 100)

@@ -4,7 +4,7 @@ import sys
 from settings import *
 from map import *
 from player import Player
-from drawing import Drawer
+from drawing import Drawer, Sprite
 from ray_casting import ray_casting_func
 
 def terminate():
@@ -17,6 +17,9 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
+
+objects = [Sprite(image_path='barrel.png', pos=(19 * TILE, 4 * TILE), player_class=player),
+           ]
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
 paused = False
@@ -37,13 +40,15 @@ while True:
         if event.type == pygame.MOUSEMOTION:
             if not paused:
                 player.rotate_camera(event.rel)
+                # print(360 - player.angle)
 
     sc.fill(BLACK)
     drawer.background()
-    drawer.walls(player)
+    drawer.world(objects, player)
     drawer.minimap(player)
     if not paused:
         player.movement()
+        objects[0].angle()
         drawer.fps(clock)
     else:
         render = font.render("Пауза", True, WHITE)

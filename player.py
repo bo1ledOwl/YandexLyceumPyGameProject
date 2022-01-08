@@ -55,9 +55,7 @@ class Player:
     def rotate_camera(self, mouse_move=(0, 0)):
         pygame.mouse.set_visible(False)
         pygame.event.set_grab(True)
-        if mouse_move[0] < 0:
+        if mouse_move[0]:
             self.angle += PLAYER_ROTATE_SPEED * mouse_move[0]
-        elif mouse_move[0] > 0:
-            self.angle += PLAYER_ROTATE_SPEED * mouse_move[0]
-        self.angle = self.angle % 360
+            self.angle %= 360
         pygame.mouse.set_pos([WIDTH // 2, HEIGHT // 2])

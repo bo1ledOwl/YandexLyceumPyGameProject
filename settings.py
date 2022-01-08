@@ -1,5 +1,10 @@
 import math
 
+
+def map_coords(x, y):
+    return int((x // TILE) * TILE), int((y // TILE) * TILE)
+
+
 # основные настройки
 WIDTH = 1280
 HEIGHT = 720
@@ -21,6 +26,7 @@ DELTA_ANGLE = FOV / NUM_RAYS
 DIST = NUM_RAYS / math.tan(math.radians(HALF_FOV))
 PROJECTION_COEFF = 1.5 * DIST * TILE
 SCALE = WIDTH / NUM_RAYS
+CENTRAL_RAY = NUM_RAYS // 2 - 1
 
 # настройки текстур
 TEXTURE_WIDTH = 1200
@@ -32,7 +38,7 @@ TEXTURE_SCALE = TEXTURE_WIDTH // TILE
 PLAYER_ANGLE = 0
 PLAYER_SPEED = 5 * (60 / FPS)
 PLAYER_ROTATE_SPEED = 1 * (60 / FPS) / 5
-WALL_SAFE_RANGE = 25
+WALL_SAFE_RANGE = 30
 HALF_WALL_SAFE_RANGE = WALL_SAFE_RANGE // 2
 
 # цвета

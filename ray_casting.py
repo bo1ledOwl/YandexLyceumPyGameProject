@@ -4,15 +4,14 @@ from settings import *
 from map import *
 
 
-def ray_casting_func(player, sc, textures):
+def ray_casting_func(player, textures):
     a = (player.angle - HALF_FOV) % 360
     xo, yo = player.x, player.y
     x_on_map, y_on_map = map_coords(xo, yo)
+    objects = []
     for ray in range(NUM_RAYS):
         sin_a = math.sin(math.radians(a))
         cos_a = math.cos(math.radians(a))
-        proj_height_h = 10
-        proj_height_v = 10
         if not sin_a:
             sin_a = 0.00000001
         if not cos_a:
@@ -54,11 +53,12 @@ def ray_casting_func(player, sc, textures):
             xv += x_next * TILE
 
         if depth_h < depth_v:
-            offset, proj_height, texture = (int(xh) % TILE, int(PROJECTION_COEFF / depth_h), texture_h)
+            depth, offsetX, proj_height, texture = (depth_h, int(xh) % TILE, int(PROJECTION_COEFF / depth_h), texture_h)
         else:
-            offset, proj_height, texture = (int(yv) % TILE, int(PROJECTION_COEFF / depth_v), texture_v)
-        wall = texture.subsurface(offset * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
+            depth, offsetX, proj_height, texture = (depth_v, int(yv) % TILE, int(PROJECTION_COEFF / depth_v), texture_v)
+        wall = texture.subsurface(offsetX * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall = pygame.transform.scale(wall, (SCALE, proj_height))
-        sc.blit(wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2))
+        objects.append((depth, wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2)))
         a += DELTA_ANGLE
         a = a % 360
+    return objects
