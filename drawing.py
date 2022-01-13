@@ -22,7 +22,7 @@ class Drawer:
 
     def world(self, objects, player):
         walls = ray_casting(player, self.textures)
-        for obj in list(walls.values()) + list(map(lambda obj: obj.locate(walls), objects)):
+        for obj in sorted(list(walls.values()) + list(filter(lambda a: a, map(lambda obj: obj.locate(walls), objects))), key=lambda a: a[0], reverse=True):
             if obj is not None:
                 self.sc.blit(obj[1], obj[2])
 
@@ -60,8 +60,8 @@ class Sprite(pygame.sprite.Sprite):
         if 180 - HALF_FOV - ADDITIONAL_ANGLE <= angle_between <= 180 + HALF_FOV + ADDITIONAL_ANGLE:
             cur_ray = (180 - angle_between + HALF_FOV) // DELTA_ANGLE + 1
             depth = abs((dx / cos(radians(obj_angle))) * math.cos(math.radians(HALF_FOV - cur_ray * DELTA_ANGLE)))
-            if cur_ray > NUM_RAYS or depth < walls.get(int(cur_ray), [True])[0]:
-                proj_height = PROJECTION_COEFF / depth * self.scale
-                pos = ((cur_ray - ADDITIONAL_RAYS / 2) * SCALE - proj_height / 2, HALF_HEIGHT - proj_height / 2 + self.v_shift * proj_height / 2)
-                sprite = pygame.transform.scale(self.image, (proj_height, proj_height))
-                return depth, sprite, pos
+            proj_height = min(PROJECTION_COEFF / depth * self.scale, HEIGHT * 2)
+            pos = ((cur_ray - ADDITIONAL_RAYS / 2) * SCALE - proj_height / 2, HALF_HEIGHT - proj_height / 2 + self.v_shift * proj_height / 2)
+            sprite = pygame.transform.scale(self.image, (proj_height, proj_height))
+            return depth, sprite, pos
+        return False
