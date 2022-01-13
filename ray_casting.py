@@ -4,11 +4,11 @@ from settings import *
 from map import *
 
 
-def ray_casting_func(player, textures):
+def ray_casting(player, textures):
     a = (player.angle - HALF_FOV) % 360
     xo, yo = player.x, player.y
     x_on_map, y_on_map = map_coords(xo, yo)
-    objects = []
+    objects = {}
     for ray in range(NUM_RAYS):
         sin_a = math.sin(math.radians(a))
         cos_a = math.cos(math.radians(a))
@@ -58,7 +58,7 @@ def ray_casting_func(player, textures):
             depth, offsetX, proj_height, texture = (depth_v, int(yv) % TILE, int(PROJECTION_COEFF / depth_v), texture_v)
         wall = texture.subsurface(offsetX * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall = pygame.transform.scale(wall, (SCALE, proj_height))
-        objects.append((depth, wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2)))
+        objects[ray] = ((depth, wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2)))
         a += DELTA_ANGLE
-        a = a % 360
+        a %= 360
     return objects
