@@ -17,7 +17,8 @@ clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 
-objects = [Sprite(image_path='barrel.png', pos=(19 * TILE, 4 * TILE), player_class=player, scale=0.5, v_shift = 1.5),
+objects = [Sprite(image_path='barrel.png', pos=(18.4 * TILE, 3.8 * TILE), player_class=player, scale=0.5, v_shift = 1.5),
+           Sprite(image_path='barrel.png', pos=(18.4 * TILE, 1.4 * TILE), player_class=player, scale=0.5, v_shift = 1.5),
            ]
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
