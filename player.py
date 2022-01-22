@@ -14,7 +14,6 @@ class Player:
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         keys = pygame.key.get_pressed()
-        # keys_count = sum(list(map(lambda a: int(a), [keys[pygame.K_w], keys[pygame.K_s], keys[pygame.K_a], keys[pygame.K_d]])))
         if keys[pygame.K_w]:
             delta_x = PLAYER_SPEED * cos_a
             delta_y = PLAYER_SPEED * sin_a
