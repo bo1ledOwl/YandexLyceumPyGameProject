@@ -6,8 +6,7 @@ from PIL import Image
 # соответствие цветов на карте и элементов игры
 SPAWN_POINT = (255, 0, 0)  # точка появления
 # виды стен
-WALL1 = (0, 0, 0)
-WALL2 = (100, 100, 100)
+WALLS = [(0, 0, 0), (50, 50, 50), (100, 100, 100), (150, 150, 150), (200, 200, 200)]
 
 world_map = {}
 im = Image.open(os.path.join("resources/maps/map.png"))
@@ -18,9 +17,7 @@ MAP_HEIGHT = y * TILE
 for i in range(x):
     for j in range(y):
         r, g, b = pixels[i, j]
-        if (r, g, b) == WALL1:
-            world_map[(i * TILE, j * TILE)] = 1
-        if (r, g, b) == WALL2:
-            world_map[(i * TILE, j * TILE)] = 2
+        if (r, g, b) in WALLS:
+            world_map[(i * TILE, j * TILE)] = WALLS.index((r, g, b))
         if (r, g, b) == SPAWN_POINT:
             PLAYER_START_POSITION = (i * TILE + TILE // 2, j * TILE + TILE // 2)

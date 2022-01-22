@@ -1,6 +1,7 @@
 import pygame
 import math
 from settings import *
+from functions import *
 from map import *
 
 
@@ -31,7 +32,6 @@ def ray_casting(player, textures):
                 texture_h = textures[world_map[coords]]
                 if depth_h == 0:
                     depth_h = 0.00001
-                proj_height_h = int(PROJECTION_COEFF / depth_h)
                 break
             yh += y_next * TILE
 
@@ -53,9 +53,9 @@ def ray_casting(player, textures):
             xv += x_next * TILE
 
         if depth_h < depth_v:
-            depth, offsetX, proj_height, texture = (depth_h, int(xh) % TILE, int(PROJECTION_COEFF / depth_h), texture_h)
+            depth, offsetX, proj_height, texture = (depth_h, int(xh) % TILE, min(int(PROJECTION_COEFF / depth_h), HEIGHT * 5), texture_h)
         else:
-            depth, offsetX, proj_height, texture = (depth_v, int(yv) % TILE, int(PROJECTION_COEFF / depth_v), texture_v)
+            depth, offsetX, proj_height, texture = (depth_v, int(yv) % TILE, min(int(PROJECTION_COEFF / depth_v), HEIGHT * 5), texture_v)
         wall = texture.subsurface(offsetX * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall = pygame.transform.scale(wall, (SCALE, proj_height))
         objects[ray] = ((depth, wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2)))
