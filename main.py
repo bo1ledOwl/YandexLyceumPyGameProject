@@ -47,7 +47,6 @@ while True:
     drawer.minimap(player)
     if not paused:
         player.movement()
-        objects[0]
         drawer.fps(clock)
     else:
         render = font.render("Пауза", True, WHITE)
