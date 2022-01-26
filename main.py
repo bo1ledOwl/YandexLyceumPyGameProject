@@ -29,6 +29,7 @@ while True:
         if event.type == pygame.QUIT:
             terminate()
         if event.type == pygame.KEYDOWN:
+            player.keyboard()
             if event.key == pygame.K_ESCAPE:
                 if not paused:
                     paused = True

@@ -10,6 +10,11 @@ class Player:
         self.x, self.y = start_coords
         self.angle = PLAYER_ANGLE
 
+    def keyboard(self):
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_SPACE]:
+            self.interact()
+
     def movement(self):
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
@@ -38,3 +43,11 @@ class Player:
             self.angle += PLAYER_ROTATE_SPEED * mouse_move[0]
             self.angle %= 360
         pygame.mouse.set_pos([WIDTH // 2, HEIGHT // 2])
+
+    def interact(self):
+        sin_a = math.sin(math.radians(self.angle))
+        cos_a = math.cos(math.radians(self.angle))
+        coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
+        door = world_map.get(coords, False)
+        if door:
+            world_map.pop(coords)

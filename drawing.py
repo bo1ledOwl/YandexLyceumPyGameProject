@@ -17,7 +17,7 @@ class Drawer:
         files = os.listdir(folder)
         self.textures = {}
         for i in range(len(files)):
-            self.textures[i] = pygame.image.load(folder + '/' + files[i]).convert()
+            self.textures[files[i][:files[i].find('.')]] = pygame.image.load(folder + '/' + files[i]).convert()
 
     def background(self):
         pygame.draw.rect(self.sc, SKYBLUE, (0, 0, WIDTH, HALF_HEIGHT))
@@ -32,8 +32,9 @@ class Drawer:
     def minimap(self, player):
         pygame.draw.rect(self.sc, BLACK, (0, 0, MAP_WIDTH * MINIMAP_SCALE, MAP_HEIGHT * MINIMAP_SCALE))
         for wall in world_map:
-            pygame.draw.rect(self.sc, PURPLE, (wall[0] * MINIMAP_SCALE, wall[1] * MINIMAP_SCALE,
-                                               TILE * MINIMAP_SCALE, TILE * MINIMAP_SCALE))
+            if world_map[wall][0] != 'd':
+                pygame.draw.rect(self.sc, PURPLE, (wall[0] * MINIMAP_SCALE, wall[1] * MINIMAP_SCALE,
+                                                    TILE * MINIMAP_SCALE, TILE * MINIMAP_SCALE))
         x, y = player.x, player.y
         pygame.draw.line(self.sc, GREEN, (x * MINIMAP_SCALE, y * MINIMAP_SCALE),
                          ((x + MINIMAP_DEPTH * cos(radians(player.angle - HALF_FOV))) * MINIMAP_SCALE,
