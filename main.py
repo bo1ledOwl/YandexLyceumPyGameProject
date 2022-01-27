@@ -42,6 +42,10 @@ while True:
             if not paused:
                 player.rotate_camera(event.rel)
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == pygame.BUTTON_LEFT:
+                player.shoot(objects, drawer.walls)
+
     sc.fill(BLACK)
     drawer.background()
     drawer.world(objects, player)

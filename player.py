@@ -44,10 +44,20 @@ class Player:
             self.angle %= 360
         pygame.mouse.set_pos([WIDTH // 2, HEIGHT // 2])
 
+    def shoot(self, objects, walls):
+        sin_a = math.sin(math.radians(self.angle))
+        cos_a = math.cos(math.radians(self.angle))
+        coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
+        objects_by_dist = list(filter(lambda obj: not obj.static, sorted(objects, key=lambda a: a.dist)))
+        for obj in objects_by_dist:
+            if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
+                print('got it')
+            else:
+                print('miss')
+
     def interact(self):
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
-        door = world_map.get(coords, False)
-        if door:
+        if world_map.get(coords, False):
             world_map.pop(coords)

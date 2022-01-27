@@ -24,8 +24,8 @@ class Drawer:
         pygame.draw.rect(self.sc, DARKGRAY, (0, HALF_HEIGHT, WIDTH, HALF_HEIGHT))
 
     def world(self, objects, player):
-        walls = ray_casting(player, self.textures)
-        for obj in sorted(list(walls.values()) + list(map(lambda obj: obj.locate(), objects)), key=lambda a: a[0], reverse=True):
+        self.walls = ray_casting(player, self.textures)
+        for obj in sorted(list(self.walls.values()) + list(map(lambda obj: obj.locate(), objects)), key=lambda a: a[0], reverse=True):
             if obj[0]:
                 self.sc.blit(obj[1], obj[2])
 
@@ -68,6 +68,19 @@ class Sprite(pygame.sprite.Sprite):
         self.rotate_speed = PLAYER_ROTATE_SPEED * 5
         self.static = static
         self.angle = 0
+
+    @property
+    def dist(self):
+        return sqrt((self.x - self.player.x) ** 2 + (self.y - self.player.y) ** 2)
+
+    @property
+    def cur_ray(self):
+        dx, dy = self.x - self.player.x, self.y - self.player.y
+        obj_angle = (180 - degrees(atan2(dy, dx))) % 360
+        angle_between = (obj_angle - (360 - self.player.angle)) % 360
+        if 180 - HALF_FOV / 2 <= angle_between <= 180 + HALF_FOV / 2:
+             return NUM_RAYS - ((angle_between - 180 + HALF_FOV) // DELTA_ANGLE + 1)
+        return False
 
     def move(self):
         if abs(self.x - self.player.x) > 25 and abs(self.y - self.player.y) > 25:
