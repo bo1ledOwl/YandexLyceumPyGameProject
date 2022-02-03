@@ -51,9 +51,12 @@ class Player:
         objects_by_dist = list(filter(lambda obj: not obj.static, sorted(objects, key=lambda a: a.dist)))
         for obj in objects_by_dist:
             if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
-                print('got it')
-            else:
-                print('miss')
+                if obj.hp > 0:
+                    obj.hp -= 10
+                    print(obj.hp)
+                if obj.hp < 0:
+                    obj.death()
+                break
 
     def interact(self):
         sin_a = math.sin(math.radians(self.angle))

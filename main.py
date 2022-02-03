@@ -4,7 +4,7 @@ import sys
 from settings import *
 from map import *
 from player import Player
-from drawing import Drawer, Sprite
+from drawing import *
 
 def terminate():
 	pygame.quit()
@@ -17,7 +17,7 @@ clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 
-objects = [Sprite(image_path='Cacodemon', pos=(17 * TILE, 13 * TILE), static=False, side=50, player_class=player, scale=1, v_shift = 0),
+objects = [Cacodemon(player, (17 * TILE, 13 * TILE)),
            Sprite(image_path='Barrel', pos=(17 * TILE, 13 * TILE), player_class=player, scale=0.5, v_shift = 1.5),
            ]
 
@@ -54,7 +54,8 @@ while True:
         player.movement()
         for obj in objects:
             if not obj.static:
-                obj.move()
+                if obj.hp > 0:
+                    obj.move()
         drawer.fps(clock)
     else:
         render = font.render("Пауза", True, WHITE)
