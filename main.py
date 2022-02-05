@@ -18,9 +18,10 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
-weapon = Weapon('Shotgun')
+weapon = Weapon('Shotgun', 15)
 
 objects = [Cacodemon(player, (17 * TILE, 13 * TILE)),
+           Imp(player, (25 * TILE, 13 * TILE)),
            Sprite(image_path='Barrel', pos=(17 * TILE, 13 * TILE), player_class=player, scale=0.5, v_shift=1.5),
            ]
 

@@ -54,9 +54,8 @@ class Player:
         for obj in objects_by_dist:
             if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
                 if obj.hp > 0:
-                    obj.hp -= 10
+                    obj.hp -= weapon.damage
                     obj.hurt()
-                    print(obj.hp)
                 if obj.hp <= 0:
                     obj.death()
                 break
@@ -70,9 +69,10 @@ class Player:
 
 
 class Weapon(pygame.sprite.Sprite):
-    def __init__(self, name):
+    def __init__(self, name, damage):
         super().__init__()
         self.name = name
+        self.damage = damage
         self.sound = pygame.mixer.Sound(f'resources/sound/{name.lower()}.wav')
         self.animation = {}
         self.in_animation = False

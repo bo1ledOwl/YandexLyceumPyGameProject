@@ -106,11 +106,12 @@ class Sprite(pygame.sprite.Sprite):
 
 
 class Demon(Sprite):
-    def __init__(self, image, player, pos, side, scale, v_shift, hp):
+    def __init__(self, image, player, pos, speed, side, scale, v_shift, hp):
         super().__init__(image_path=image, pos=pos, static=False, side=side, player_class=player, scale=scale,
                          v_shift=v_shift)
         self.hp = hp
         self.death_animation = []
+        self.speed = speed
         self.pain_sound = pygame.mixer.Sound(f'resources/sound/pain.wav')
         self.death_sound = pygame.mixer.Sound(f'resources/sound/death.wav')
         self.cur_frame = 0
@@ -126,8 +127,8 @@ class Demon(Sprite):
             dx, dy = self.player.x - self.x, self.player.y - self.y
             obj_angle = (180 - degrees(atan2(dy, dx))) % 360
             self.x, self.y = check_intersection(self.x, self.y,
-                                                -cos(radians(obj_angle)) * PLAYER_SPEED // 2,
-                                                sin(radians(obj_angle)) * PLAYER_SPEED // 2, self.side)
+                                                -cos(radians(obj_angle)) * self.speed,
+                                                sin(radians(obj_angle)) * self.speed, self.side)
         angle_between = (self.angle - (360 - self.player.angle)) % 360
         if 2 < angle_between <= 180:
             self.angle -= self.rotate_speed
@@ -159,4 +160,9 @@ class Demon(Sprite):
 
 class Cacodemon(Demon):
     def __init__(self, player, pos):
-        super().__init__(image='Cacodemon', player=player, pos=pos, side=50, scale=1, v_shift=0, hp=40)
+        super().__init__(image='Cacodemon', player=player, pos=pos, speed=PLAYER_SPEED // 2, side=50, scale=1, v_shift=0, hp=40)
+
+
+class Imp(Demon):
+    def __init__(self, player, pos):
+        super().__init__(image='Imp', player=player, speed=PLAYER_SPEED / 3, pos=pos, side=25, scale=0.5, v_shift=0.75, hp=15)
