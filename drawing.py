@@ -67,8 +67,6 @@ class Sprite(pygame.sprite.Sprite):
         self.scale = scale
         self.v_shift = v_shift
         self.side = side
-        self.speed = PLAYER_SPEED / 2
-        self.rotate_speed = PLAYER_ROTATE_SPEED * 5
         self.static = static
         self.angle = 0
 
@@ -105,13 +103,18 @@ class Sprite(pygame.sprite.Sprite):
         return [False]
 
 
-class Demon(Sprite):
-    def __init__(self, image, player, pos, speed, side, scale, v_shift, hp):
+class Enemy(Sprite):
+    def __init__(self, image, player, pos, speed, side, scale, v_shift, hp, attack_cooldown):
         super().__init__(image_path=image, pos=pos, static=False, side=side, player_class=player, scale=scale,
                          v_shift=v_shift)
         self.hp = hp
         self.death_animation = []
+        self.attack_animation = []
+        self.attacking = False
+        self.attack_cooldown = 0
+        self.attack_cooldown_max = attack_cooldown
         self.speed = speed
+        self.rotate_speed = PLAYER_ROTATE_SPEED * 6
         self.pain_sound = pygame.mixer.Sound(f'resources/sound/pain.wav')
         self.death_sound = pygame.mixer.Sound(f'resources/sound/death.wav')
         self.cur_frame = 0
@@ -121,15 +124,25 @@ class Demon(Sprite):
         files = os.listdir(folder)
         for i in range(len(files)):
             self.death_animation.append(pygame.image.load(folder + '/' + files[i]).convert_alpha())
+        folder = os.path.abspath(__file__).replace('drawing.py',
+                                                   '') + 'resources/sprites/' + self.image_path + '/attack/'
+        files = os.listdir(folder)
+        for i in range(len(files)):
+            self.attack_animation.append(pygame.image.load(folder + '/' + files[i]).convert_alpha())
 
-    def move(self):
-        if abs(self.x - self.player.x) > 25 and abs(self.y - self.player.y) > 25:
+    def interact(self):
+        if abs(self.x - self.player.x) > WALL_SAFE_RANGE or abs(self.y - self.player.y) > WALL_SAFE_RANGE:
             dx, dy = self.player.x - self.x, self.player.y - self.y
             obj_angle = (180 - degrees(atan2(dy, dx))) % 360
             self.x, self.y = check_intersection(self.x, self.y,
                                                 -cos(radians(obj_angle)) * self.speed,
                                                 sin(radians(obj_angle)) * self.speed, self.side)
         angle_between = (self.angle - (360 - self.player.angle)) % 360
+        if not self.attacking and self.attack_cooldown > 0:
+            self.attack_cooldown += 1
+            self.attack_cooldown %= self.attack_cooldown_max
+        if self.attack_cooldown == 0:
+            self.attacking = True
         if 2 < angle_between <= 180:
             self.angle -= self.rotate_speed
         elif 180 < angle_between < 358:
@@ -139,9 +152,18 @@ class Demon(Sprite):
     def draw(self, visible, proj_height=0, depth=0, pos=(0, 0)):
         if visible:
             if self.alive:
-                sprite = pygame.transform.scale(self.images[(((360 - self.player.angle) - self.angle)
-                                                % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
-                                                (proj_height, proj_height))
+                if self.attacking:
+                    sprite = pygame.transform.scale(self.attack_animation[int(self.cur_frame)], (proj_height, proj_height))
+                    if self.cur_frame < len(self.attack_animation) - 1:
+                        self.cur_frame += 0.15 * (60 / FPS)
+                    if int(self.cur_frame) == len(self.attack_animation) - 1:
+                        self.cur_frame = 0
+                        self.attacking = False
+                        self.attack_cooldown = 1
+                else:
+                    sprite = pygame.transform.scale(self.images[(((360 - self.player.angle) - self.angle)
+                                                                 % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
+                                                    (proj_height, proj_height))
             else:
                 sprite = pygame.transform.scale(self.death_animation[int(self.cur_frame)], (proj_height, proj_height))
                 if self.cur_frame < len(self.death_animation) - 1:
@@ -150,6 +172,8 @@ class Demon(Sprite):
         return [False]
 
     def death(self):
+        if self.attacking:
+            self.cur_frame = 0
         if self.alive:
             self.alive = False
             self.death_sound.play()
@@ -158,11 +182,35 @@ class Demon(Sprite):
         self.pain_sound.play()
 
 
-class Cacodemon(Demon):
+class Cacodemon(Enemy):
     def __init__(self, player, pos):
-        super().__init__(image='Cacodemon', player=player, pos=pos, speed=PLAYER_SPEED // 2, side=50, scale=1, v_shift=0, hp=40)
+        super().__init__(image='Cacodemon', player=player, pos=pos, speed=PLAYER_SPEED // 2, side=50,
+                         scale=1, v_shift=0, hp=40, attack_cooldown=60)
 
 
-class Imp(Demon):
+class Imp(Enemy):
     def __init__(self, player, pos):
-        super().__init__(image='Imp', player=player, speed=PLAYER_SPEED / 3, pos=pos, side=25, scale=0.5, v_shift=0.75, hp=15)
+        super().__init__(image='Imp', player=player, speed=PLAYER_SPEED / 3, pos=pos, side=25,
+                         scale=0.5, v_shift=0.75, hp=15, attack_cooldown=50)
+
+
+class Soldier1(Enemy):
+    def __init__(self, player, pos):
+        super().__init__(image='Soldier1', player=player, speed=PLAYER_SPEED / 3, pos=pos, side=25,
+                         scale=0.5, v_shift=0.75, hp=15, attack_cooldown=65)
+
+
+class Soldier2(Enemy):
+    def __init__(self, player, pos):
+        super().__init__(image='Soldier2', player=player, speed=PLAYER_SPEED / 3, pos=pos, side=25,
+                         scale=0.5, v_shift=0.75, hp=15, attack_cooldown=65)
+
+
+class Barrel(Sprite):
+    def __init__(self, player, pos):
+        super().__init__(image_path='Barrel', pos=pos, player_class=player, scale=0.5, v_shift=1.5)
+
+
+class Pedestal(Sprite):
+    def __init__(self, player, pos):
+        super().__init__(image_path='Pedestal', pos=pos, player_class=player, scale=0.5, v_shift=1.5)

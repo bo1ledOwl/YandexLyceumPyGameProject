@@ -50,7 +50,7 @@ class Player:
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
-        objects_by_dist = list(filter(lambda obj: not obj.static, sorted(objects, key=lambda a: a.dist)))
+        objects_by_dist = list(filter(lambda obj: not obj.static and obj.alive, sorted(objects, key=lambda a: a.dist)))
         for obj in objects_by_dist:
             if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
                 if obj.hp > 0:

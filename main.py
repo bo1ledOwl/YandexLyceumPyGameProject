@@ -20,10 +20,14 @@ drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 weapon = Weapon('Shotgun', 15)
 
-objects = [Cacodemon(player, (17 * TILE, 13 * TILE)),
-           Imp(player, (25 * TILE, 13 * TILE)),
-           Sprite(image_path='Barrel', pos=(17 * TILE, 13 * TILE), player_class=player, scale=0.5, v_shift=1.5),
-           ]
+enemies = [Soldier1, Soldier2, Imp, Cacodemon]
+objects = [Barrel, Pedestal]
+
+game_objects = []
+for obj in enemies_coords:
+    game_objects.append(enemies[enemies_coords[obj]](player, obj))
+for obj in objects_coords:
+    game_objects.append(objects[objects_coords[obj]](player, obj))
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
 paused = False
@@ -50,20 +54,20 @@ while True:
             if event.button == pygame.BUTTON_LEFT:
                 if not paused:
                     if not weapon.in_animation:
-                        player.shoot(objects, drawer.walls, weapon)
+                        player.shoot(game_objects, drawer.walls, weapon)
 
     sc.fill(BLACK)
     drawer.background()
-    drawer.world(objects, player)
+    drawer.world(game_objects, player)
     weapon.draw(sc)
     drawer.minimap(player)
     if not paused:
         player.movement()
         weapon.animation_frame()
-        for obj in objects:
+        for obj in game_objects:
             if not obj.static:
-                if obj.hp > 0:
-                    obj.move()
+                if obj.alive:
+                    obj.interact()
         drawer.fps(clock)
     else:
         render = font.render("Пауза", True, WHITE)
