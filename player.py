@@ -46,6 +46,7 @@ class Player:
 
     def shoot(self, objects, walls, weapon):
         weapon.in_animation = True
+        weapon.sound.play()
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
@@ -54,6 +55,7 @@ class Player:
             if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
                 if obj.hp > 0:
                     obj.hp -= 10
+                    obj.hurt()
                     print(obj.hp)
                 if obj.hp <= 0:
                     obj.death()
@@ -65,3 +67,27 @@ class Player:
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
         if world_map.get(coords, False):
             world_map.pop(coords)
+
+
+class Weapon(pygame.sprite.Sprite):
+    def __init__(self, name):
+        super().__init__()
+        self.name = name
+        self.sound = pygame.mixer.Sound(f'resources/sound/{name.lower()}.wav')
+        self.animation = {}
+        self.in_animation = False
+        self.cur_frame = 0
+        folder = os.path.abspath(__file__).replace('player.py', '') + 'resources/sprites/weapon/' + name
+        files = os.listdir(folder)
+        for i in range(len(files)):
+            self.animation[i] = pygame.image.load(folder + '/' + files[i]).convert_alpha()
+
+    def animation_frame(self):
+        if self.in_animation and self.cur_frame < len(self.animation) - 9:
+            self.cur_frame += 0.25 * (60 / FPS)
+        else:
+            self.cur_frame = 0
+            self.in_animation = False
+
+    def draw(self, sc):
+        sc.blit(self.animation[int(self.cur_frame)], (HALF_WIDTH * 0.65, HALF_HEIGHT * 1.25))

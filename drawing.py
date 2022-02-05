@@ -111,6 +111,8 @@ class Demon(Sprite):
                          v_shift=v_shift)
         self.hp = hp
         self.death_animation = []
+        self.pain_sound = pygame.mixer.Sound(f'resources/sound/pain.wav')
+        self.death_sound = pygame.mixer.Sound(f'resources/sound/death.wav')
         self.cur_frame = 0
         self.alive = True
         folder = os.path.abspath(__file__).replace('drawing.py',
@@ -142,38 +144,19 @@ class Demon(Sprite):
             else:
                 sprite = pygame.transform.scale(self.death_animation[int(self.cur_frame)], (proj_height, proj_height))
                 if self.cur_frame < len(self.death_animation) - 1:
-                    self.cur_frame += 0.2
+                    self.cur_frame += 0.2 * (60 / FPS)
             return depth, sprite, pos
         return [False]
 
     def death(self):
         if self.alive:
             self.alive = False
+            self.death_sound.play()
+
+    def hurt(self):
+        self.pain_sound.play()
 
 
 class Cacodemon(Demon):
     def __init__(self, player, pos):
         super().__init__(image='Cacodemon', player=player, pos=pos, side=50, scale=1, v_shift=0, hp=40)
-
-
-class Weapon(pygame.sprite.Sprite):
-    def __init__(self, image_path=''):
-        super().__init__()
-        self.image_path = image_path
-        self.animation = {}
-        self.in_animation = False
-        self.cur_frame = 0
-        folder = os.path.abspath(__file__).replace('drawing.py', '') + 'resources/sprites/weapon/' + image_path
-        files = os.listdir(folder)
-        for i in range(len(files)):
-            self.animation[i] = pygame.image.load(folder + '/' + files[i]).convert_alpha()
-
-    def animation_frame(self):
-        if self.in_animation and self.cur_frame < len(self.animation) - 1:
-            self.cur_frame += 0.25
-        else:
-            self.cur_frame = 0
-            self.in_animation = False
-
-    def draw(self, sc):
-        sc.blit(self.animation[int(self.cur_frame)], (HALF_WIDTH * 0.65, HALF_HEIGHT * 1.25))

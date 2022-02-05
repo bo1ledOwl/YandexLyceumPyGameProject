@@ -3,7 +3,7 @@ import math
 import sys
 from settings import *
 from map import *
-from player import Player
+from player import Player, Weapon
 from drawing import *
 
 
