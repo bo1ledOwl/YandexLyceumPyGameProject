@@ -13,10 +13,13 @@ def ray_casting(player, textures):
     for ray in range(NUM_RAYS):
         sin_a = math.sin(math.radians(a))
         cos_a = math.cos(math.radians(a))
+        # чтобы избежать ZeroDivisionError
         if not sin_a:
             sin_a = 0.00000001
         if not cos_a:
             cos_a = 0.00000001
+
+        # подробности расчетов ниже в статье в пояснительной записке
 
         # по горизонталям
         if sin_a >= 0:

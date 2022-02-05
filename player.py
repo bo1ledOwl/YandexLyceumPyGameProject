@@ -19,6 +19,7 @@ class Player:
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         keys = pygame.key.get_pressed()
+        # реакция на кнопки с проверкой на столкновения со стенами
         if keys[pygame.K_w]:
             delta_x = PLAYER_SPEED * cos_a
             delta_y = PLAYER_SPEED * sin_a
@@ -50,17 +51,21 @@ class Player:
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
+        # сортировка объектов по расстоянию
         objects_by_dist = list(filter(lambda obj: not obj.static and obj.alive, sorted(objects, key=lambda a: a.dist)))
         for obj in objects_by_dist:
             if obj.dist < walls.get(int(obj.cur_ray), [False])[0] and obj.cur_ray:
+                # нанесение урона
                 if obj.hp > 0:
                     obj.hp -= weapon.damage
                     obj.hurt()
+                # убийство врага
                 if obj.hp <= 0:
                     obj.death()
                 break
 
     def interact(self):
+        # взаимодействие с дверьми
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
@@ -83,6 +88,7 @@ class Weapon(pygame.sprite.Sprite):
             self.animation[i] = pygame.image.load(folder + '/' + files[i]).convert_alpha()
 
     def animation_frame(self):
+        # анимация выстрела
         if self.in_animation and self.cur_frame < len(self.animation) - 9:
             self.cur_frame += 0.25 * (60 / FPS)
         else:

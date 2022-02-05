@@ -20,9 +20,10 @@ drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
 weapon = Weapon('Shotgun', 15)
 
-enemies = [Soldier1, Soldier2, Imp, Cacodemon]
+enemies = [Soldier1, Soldier2, Imp, Cacodemon]  # связь цветов на карте с классами объектов
 objects = [Barrel, Pedestal]
 
+# подготовка объектов на карте
 game_objects = []
 for obj in enemies_coords:
     game_objects.append(enemies[enemies_coords[obj]](player, obj))

@@ -2,7 +2,7 @@ from settings import *
 from map import *
 
 
-def map_coords(x, y):
+def map_coords(x, y):  # округление координат чтобы сверять с картой
     return int((x // TILE) * TILE), int((y // TILE) * TILE)
 
 
@@ -12,7 +12,7 @@ def check_sign(n):
     return -1
 
 
-def check_intersection(x, y, dx, dy, side=WALL_SAFE_RANGE):
+def check_intersection(x, y, dx, dy, side=WALL_SAFE_RANGE):  # проверка пересечений на карте
     if not map_coords(x + dx + check_sign(dx) * side, y) in world_map:
         x += dx
     if not map_coords(x, y + dy + check_sign(dy) * side) in world_map:
