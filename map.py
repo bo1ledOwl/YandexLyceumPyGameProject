@@ -2,7 +2,6 @@ import os
 from settings import *
 from PIL import Image
 
-
 # соответствие цветов на карте и элементов игры
 SPAWN_POINT = (255, 0, 0)  # точка появления
 # виды стен

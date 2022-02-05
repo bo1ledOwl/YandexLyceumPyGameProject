@@ -44,7 +44,8 @@ class Player:
             self.angle %= 360
         pygame.mouse.set_pos([WIDTH // 2, HEIGHT // 2])
 
-    def shoot(self, objects, walls):
+    def shoot(self, objects, walls, weapon):
+        weapon.in_animation = True
         sin_a = math.sin(math.radians(self.angle))
         cos_a = math.cos(math.radians(self.angle))
         coords = map_coords(self.x + TILE * cos_a, self.y + TILE * sin_a)
@@ -54,7 +55,7 @@ class Player:
                 if obj.hp > 0:
                     obj.hp -= 10
                     print(obj.hp)
-                if obj.hp < 0:
+                if obj.hp <= 0:
                     obj.death()
                 break
 

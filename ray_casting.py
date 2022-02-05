@@ -53,9 +53,11 @@ def ray_casting(player, textures):
             xv += x_next * TILE
 
         if depth_h < depth_v:
-            depth, offsetX, proj_height, texture = (depth_h, int(xh) % TILE, min(int(PROJECTION_COEFF / depth_h), HEIGHT * 5), texture_h)
+            depth, offsetX, proj_height, texture = (
+            depth_h, int(xh) % TILE, min(int(PROJECTION_COEFF / depth_h), HEIGHT * 5), texture_h)
         else:
-            depth, offsetX, proj_height, texture = (depth_v, int(yv) % TILE, min(int(PROJECTION_COEFF / depth_v), HEIGHT * 5), texture_v)
+            depth, offsetX, proj_height, texture = (
+            depth_v, int(yv) % TILE, min(int(PROJECTION_COEFF / depth_v), HEIGHT * 5), texture_v)
         wall = texture.subsurface(offsetX * TEXTURE_SCALE, 0, TEXTURE_SCALE, TEXTURE_HEIGHT)
         wall = pygame.transform.scale(wall, (SCALE, proj_height))
         objects[ray] = ((depth, wall, (ray * SCALE, HALF_HEIGHT - proj_height / 2)))

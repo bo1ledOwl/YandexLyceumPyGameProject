@@ -6,9 +6,11 @@ from map import *
 from player import Player
 from drawing import *
 
+
 def terminate():
-	pygame.quit()
-	sys.exit()
+    pygame.quit()
+    sys.exit()
+
 
 pygame.init()
 sc = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -16,9 +18,10 @@ sc = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 drawer = Drawer(sc)
 player = Player(PLAYER_START_POSITION)
+weapon = Weapon('Shotgun')
 
 objects = [Cacodemon(player, (17 * TILE, 13 * TILE)),
-           Sprite(image_path='Barrel', pos=(17 * TILE, 13 * TILE), player_class=player, scale=0.5, v_shift = 1.5),
+           Sprite(image_path='Barrel', pos=(17 * TILE, 13 * TILE), player_class=player, scale=0.5, v_shift=1.5),
            ]
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
@@ -44,14 +47,18 @@ while True:
 
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == pygame.BUTTON_LEFT:
-                player.shoot(objects, drawer.walls)
+                if not paused:
+                    if not weapon.in_animation:
+                        player.shoot(objects, drawer.walls, weapon)
 
     sc.fill(BLACK)
     drawer.background()
     drawer.world(objects, player)
+    weapon.draw(sc)
     drawer.minimap(player)
     if not paused:
         player.movement()
+        weapon.animation_frame()
         for obj in objects:
             if not obj.static:
                 if obj.hp > 0:

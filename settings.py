@@ -1,6 +1,5 @@
 import math
 
-
 # основные настройки
 WIDTH = 1280
 HEIGHT = 720

@@ -35,11 +35,11 @@ class Drawer:
         for wall in world_map:
             if world_map[wall][0] != 'd':
                 pygame.draw.rect(self.sc, PURPLE, (wall[0] * MINIMAP_SCALE, wall[1] * MINIMAP_SCALE,
-                                 TILE * MINIMAP_SCALE, TILE * MINIMAP_SCALE))
+                                                   TILE * MINIMAP_SCALE, TILE * MINIMAP_SCALE))
         x, y = player.x, player.y
         pygame.draw.line(self.sc, GREEN, (x * MINIMAP_SCALE, y * MINIMAP_SCALE),
                          ((x + MINIMAP_DEPTH * cos(radians(player.angle - HALF_FOV))) * MINIMAP_SCALE,
-                         (y + MINIMAP_DEPTH * sin(radians(player.angle - HALF_FOV))) * MINIMAP_SCALE))
+                          (y + MINIMAP_DEPTH * sin(radians(player.angle - HALF_FOV))) * MINIMAP_SCALE))
         pygame.draw.line(self.sc, GREEN, (x * MINIMAP_SCALE, y * MINIMAP_SCALE),
                          ((x + MINIMAP_DEPTH * cos(radians(player.angle + HALF_FOV))) * MINIMAP_SCALE,
                           (y + MINIMAP_DEPTH * sin(radians(player.angle + HALF_FOV))) * MINIMAP_SCALE))
@@ -81,7 +81,7 @@ class Sprite(pygame.sprite.Sprite):
         dx, dy = self.x - self.player.x, self.y - self.player.y
         obj_angle = (180 - degrees(atan2(dy, dx))) % 360
         angle_between = (obj_angle - (360 - self.player.angle)) % 360
-        if 180 - HALF_FOV / 2 <= angle_between <= 180 + HALF_FOV / 2:
+        if 180 - HALF_FOV <= angle_between <= 180 + HALF_FOV:
             return NUM_RAYS - ((angle_between - 180 + HALF_FOV) // DELTA_ANGLE + 1)
         return False
 
@@ -104,14 +104,17 @@ class Sprite(pygame.sprite.Sprite):
             return depth, sprite, pos
         return [False]
 
+
 class Demon(Sprite):
     def __init__(self, image, player, pos, side, scale, v_shift, hp):
-        super().__init__(image_path=image, pos=pos, static=False, side=side, player_class=player, scale=scale, v_shift = v_shift)
+        super().__init__(image_path=image, pos=pos, static=False, side=side, player_class=player, scale=scale,
+                         v_shift=v_shift)
         self.hp = hp
         self.death_animation = []
         self.cur_frame = 0
         self.alive = True
-        folder = os.path.abspath(__file__).replace('drawing.py', '') + 'resources/sprites/' + self.image_path + '/death/'
+        folder = os.path.abspath(__file__).replace('drawing.py',
+                                                   '') + 'resources/sprites/' + self.image_path + '/death/'
         files = os.listdir(folder)
         for i in range(len(files)):
             self.death_animation.append(pygame.image.load(folder + '/' + files[i]).convert_alpha())
@@ -121,7 +124,8 @@ class Demon(Sprite):
             dx, dy = self.player.x - self.x, self.player.y - self.y
             obj_angle = (180 - degrees(atan2(dy, dx))) % 360
             self.x, self.y = check_intersection(self.x, self.y,
-                -cos(radians(obj_angle)) * PLAYER_SPEED // 2, sin(radians(obj_angle)) * PLAYER_SPEED // 2, self.side)
+                                                -cos(radians(obj_angle)) * PLAYER_SPEED // 2,
+                                                sin(radians(obj_angle)) * PLAYER_SPEED // 2, self.side)
         angle_between = (self.angle - (360 - self.player.angle)) % 360
         if 2 < angle_between <= 180:
             self.angle -= self.rotate_speed
@@ -131,14 +135,14 @@ class Demon(Sprite):
 
     def draw(self, visible, proj_height=0, depth=0, pos=(0, 0)):
         if visible:
-            if self.hp > 0:
+            if self.alive:
                 sprite = pygame.transform.scale(self.images[(((360 - self.player.angle) - self.angle)
-                                                         % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
-                                            (proj_height, proj_height))
+                                                % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
+                                                (proj_height, proj_height))
             else:
-                sprite = pygame.transform.scale(self.death_animation[self.cur_frame], (proj_height, proj_height))
+                sprite = pygame.transform.scale(self.death_animation[int(self.cur_frame)], (proj_height, proj_height))
                 if self.cur_frame < len(self.death_animation) - 1:
-                    self.cur_frame += 1
+                    self.cur_frame += 0.2
             return depth, sprite, pos
         return [False]
 
@@ -149,4 +153,27 @@ class Demon(Sprite):
 
 class Cacodemon(Demon):
     def __init__(self, player, pos):
-        super().__init__(image='Cacodemon', player=player, pos=pos, side=50, scale=1, v_shift=0, hp=10)
+        super().__init__(image='Cacodemon', player=player, pos=pos, side=50, scale=1, v_shift=0, hp=40)
+
+
+class Weapon(pygame.sprite.Sprite):
+    def __init__(self, image_path=''):
+        super().__init__()
+        self.image_path = image_path
+        self.animation = {}
+        self.in_animation = False
+        self.cur_frame = 0
+        folder = os.path.abspath(__file__).replace('drawing.py', '') + 'resources/sprites/weapon/' + image_path
+        files = os.listdir(folder)
+        for i in range(len(files)):
+            self.animation[i] = pygame.image.load(folder + '/' + files[i]).convert_alpha()
+
+    def animation_frame(self):
+        if self.in_animation and self.cur_frame < len(self.animation) - 1:
+            self.cur_frame += 0.25
+        else:
+            self.cur_frame = 0
+            self.in_animation = False
+
+    def draw(self, sc):
+        sc.blit(self.animation[int(self.cur_frame)], (HALF_WIDTH * 0.65, HALF_HEIGHT * 1.25))
