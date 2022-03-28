@@ -26,7 +26,8 @@ class Drawer:  # класс для отрисовки карты и интерф
 
     def world(self, objects, player):
         self.walls = ray_casting(player, self.textures)
-        for obj in sorted(list(self.walls.values()) + list(map(lambda obj: obj.locate(), objects)),  # список для отрисовки объектов
+        for obj in sorted(list(self.walls.values()) + list(map(lambda obj: obj.locate(), objects)),
+                          # список для отрисовки объектов
                           key=lambda a: a[0], reverse=True):
             if obj[0]:  # проверка на видимость объекта
                 self.sc.blit(obj[1], obj[2])
@@ -102,15 +103,13 @@ class Sprite(pygame.sprite.Sprite):
             # позиция на экране
             pos = (cur_ray * SCALE,
                    HALF_HEIGHT - proj_height / 2 + self.v_shift * proj_height / 2)
-            return self.draw(True, proj_height, depth, pos)
-        return self.draw(False)
-
-    def draw(self, visible, proj_height=0, depth=0, pos=(0, 0)):
-        # метод для отрисовки, выполняется только если объект в поле видимости, изменен у класса врагов
-        if visible:
-            sprite = pygame.transform.scale(self.images[0], (proj_height, proj_height))
-            return depth, sprite, pos
+            return self.draw(proj_height, depth, pos)
         return [False]
+
+    def draw(self, proj_height=0, depth=0, pos=(0, 0)):
+        # метод для отрисовки, выполняется только если объект в поле видимости, изменен у класса врагов
+        sprite = pygame.transform.scale(self.images[0], (proj_height, proj_height))
+        return depth, sprite, pos
 
 
 class Enemy(Sprite):
@@ -143,7 +142,8 @@ class Enemy(Sprite):
             self.attack_animation.append(pygame.image.load(folder + '/' + files[i]).convert_alpha())
 
     def interact(self):
-        if abs(self.x - self.player.x) > WALL_SAFE_RANGE or abs(self.y - self.player.y) > WALL_SAFE_RANGE:  # перемещение к игроку
+        if abs(self.x - self.player.x) > WALL_SAFE_RANGE or abs(
+                self.y - self.player.y) > WALL_SAFE_RANGE:  # перемещение к игроку
             dx, dy = self.player.x - self.x, self.player.y - self.y
             obj_angle = (180 - degrees(atan2(dy, dx))) % 360
             self.x, self.y = check_intersection(self.x, self.y,
@@ -163,30 +163,29 @@ class Enemy(Sprite):
             self.angle += self.rotate_speed
         self.angle %= 360
 
-    def draw(self, visible, proj_height=0, depth=0, pos=(0, 0)):
-        if visible:
-            if self.alive:
-                if self.attacking:
-                    # анимация атаки
-                    sprite = pygame.transform.scale(self.attack_animation[int(self.cur_frame)], (proj_height, proj_height))
-                    if self.cur_frame < len(self.attack_animation) - 1:
-                        self.cur_frame += 0.15 * (60 / FPS)
-                    if int(self.cur_frame) == len(self.attack_animation) - 1:
-                        self.cur_frame = 0
-                        self.attacking = False
-                        self.attack_cooldown = 1
-                else:
-                    # статичное изображение врага
-                    sprite = pygame.transform.scale(self.images[(((360 - self.player.angle) - self.angle)
-                                                                 % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
-                                                    (proj_height, proj_height))
+    def draw(self, proj_height=0, depth=0, pos=(0, 0)):
+        if self.alive:
+            if self.attacking:
+                # анимация атаки
+                sprite = pygame.transform.scale(self.attack_animation[int(self.cur_frame)],
+                                                (proj_height, proj_height))
+                if self.cur_frame < len(self.attack_animation) - 1:
+                    self.cur_frame += 0.15 * (60 / FPS)
+                if int(self.cur_frame) == len(self.attack_animation) - 1:
+                    self.cur_frame = 0
+                    self.attacking = False
+                    self.attack_cooldown = 1
             else:
-                # анимация смерти
-                sprite = pygame.transform.scale(self.death_animation[int(self.cur_frame)], (proj_height, proj_height))
-                if self.cur_frame < len(self.death_animation) - 1:
-                    self.cur_frame += 0.2 * (60 / FPS)
-            return depth, sprite, pos
-        return [False]
+                # статичное изображение врага
+                sprite = pygame.transform.scale(self.images[(((360 - self.player.angle) - self.angle)
+                                                             % 360 + ONE_VIEW_ANGLE / 2) % 360 // ONE_VIEW_ANGLE * ONE_VIEW_ANGLE],
+                                                (proj_height, proj_height))
+        else:
+            # анимация смерти
+            sprite = pygame.transform.scale(self.death_animation[int(self.cur_frame)], (proj_height, proj_height))
+            if self.cur_frame < len(self.death_animation) - 1:
+                self.cur_frame += 0.2 * (60 / FPS)
+        return depth, sprite, pos
 
     def death(self):
         if self.attacking:
@@ -197,6 +196,7 @@ class Enemy(Sprite):
 
     def hurt(self):
         self.pain_sound.play()
+
 
 # готовые классы врагов
 class Cacodemon(Enemy):

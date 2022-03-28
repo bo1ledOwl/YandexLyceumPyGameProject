@@ -32,6 +32,7 @@ for obj in objects_coords:
 
 font = pygame.font.SysFont('Arial', 36, bold=True)
 paused = False
+end = False
 
 while True:
     for event in pygame.event.get():
@@ -62,14 +63,19 @@ while True:
     drawer.world(game_objects, player)
     weapon.draw(sc)
     drawer.minimap(player)
-    if not paused:
+    if not paused and not end:
         player.movement()
         weapon.animation_frame()
+        end = True
         for obj in game_objects:
             if not obj.static:
                 if obj.alive:
+                    end = False
                     obj.interact()
         drawer.fps(clock)
+    elif end:
+        render = font.render("Победа", True, WHITE)
+        sc.blit(render, PAUSE_POS)
     else:
         render = font.render("Пауза", True, WHITE)
         sc.blit(render, PAUSE_POS)
