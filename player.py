@@ -78,7 +78,8 @@ class Weapon(pygame.sprite.Sprite):
         super().__init__()
         self.name = name
         self.damage = damage
-        self.sound = pygame.mixer.Sound(f'resources/sound/{name.lower()}.wav')
+        self.sound = pygame.mixer.Sound(os.path.abspath(__file__).replace('player.py',
+                                                                          '') + f'resources/sound/{name.lower()}.wav')
         self.animation = {}
         self.in_animation = False
         self.cur_frame = 0

@@ -13,7 +13,8 @@ DOORS = [(150, 150, 150)]
 world_map = {}
 enemies_coords = {}
 objects_coords = {}
-im = Image.open(os.path.join("resources/maps/map.png"))
+im = Image.open(os.path.abspath(__file__).replace('map.py',
+                                                  '') + os.path.join("resources/maps/map.png"))
 pixels = im.load()
 x, y = im.size
 MAP_WIDTH = x * TILE

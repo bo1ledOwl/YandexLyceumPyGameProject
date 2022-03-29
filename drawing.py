@@ -87,17 +87,15 @@ class Sprite(pygame.sprite.Sprite):
         dx, dy = self.x - self.player.x, self.y - self.player.y
         obj_angle = (180 - degrees(atan2(dy, dx))) % 360
         angle_between = (obj_angle - (360 - self.player.angle)) % 360
-        if 180 - HALF_FOV <= angle_between <= 180 + HALF_FOV:
+        if 180 - HALF_FOV - ADDITIONAL_ANGLE <= angle_between <= 180 + HALF_FOV + ADDITIONAL_ANGLE:
             return NUM_RAYS - ((angle_between - 180 + HALF_FOV) // DELTA_ANGLE + 1)
         return False
 
     def locate(self):
         # подготовка спрайта к отрисовке
-        dx, dy = self.x - self.player.x, self.y - self.player.y
-        obj_angle = (180 - degrees(atan2(dy, dx))) % 360
-        angle_between = (obj_angle - (360 - self.player.angle)) % 360  # угол между игроком и спрайтом
-        if 180 - HALF_FOV - ADDITIONAL_ANGLE <= angle_between <= 180 + HALF_FOV + ADDITIONAL_ANGLE:  # проверка на видимость
-            cur_ray = NUM_RAYS - ((angle_between - 180 + HALF_FOV) // DELTA_ANGLE + 1)
+        cur_ray = self.cur_ray
+        if cur_ray:
+            # проверка на видимость
             depth = self.dist * cos(radians(HALF_FOV - cur_ray * DELTA_ANGLE))
             proj_height = min(PROJECTION_COEFF / max(depth, 0.0000001) * self.scale, HEIGHT * 2)  # размеры объекта
             # позиция на экране
@@ -106,7 +104,7 @@ class Sprite(pygame.sprite.Sprite):
             return self.draw(proj_height, depth, pos)
         return [False]
 
-    def draw(self, proj_height=0, depth=0, pos=(0, 0)):
+    def draw(self, proj_height, depth, pos):
         # метод для отрисовки, выполняется только если объект в поле видимости, изменен у класса врагов
         sprite = pygame.transform.scale(self.images[0], (proj_height, proj_height))
         return depth, sprite, pos
@@ -127,8 +125,10 @@ class Enemy(Sprite):
         self.attack_cooldown_max = attack_cooldown
         self.speed = speed
         self.rotate_speed = PLAYER_ROTATE_SPEED * 6
-        self.pain_sound = pygame.mixer.Sound(f'resources/sound/pain.wav')
-        self.death_sound = pygame.mixer.Sound(f'resources/sound/death.wav')
+        self.pain_sound = pygame.mixer.Sound(os.path.abspath(__file__).replace('drawing.py',
+                                                                               '') + 'resources/sound/pain.wav')
+        self.death_sound = pygame.mixer.Sound(os.path.abspath(__file__).replace('drawing.py',
+                                                                                '') + 'resources/sound/death.wav')
         self.cur_frame = 0
         folder = os.path.abspath(__file__).replace('drawing.py',
                                                    '') + 'resources/sprites/' + self.image_path + '/death/'
